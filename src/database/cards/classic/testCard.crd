@@ -12,31 +12,9 @@
     "pull_power": 5,
     "rally_cost": 4
   },
-  "triggers": [
-    {
-      "event": "PLAYER_PLAY",
-      "action": "DESTROY_TO_GRAVEYARD",
-      "target": "PLAYED_CARD",
-      "target_requirement": "BOARD",
-      "auto_activate": false
-    },
-    {
-      "event": "PLAYER_DRAW",
-      "action": "DESTROY_TO_GRAVEYARD",
-      "target": "CARD_DRAWN",
-      "target_requirement": "HAND",
-      "auto_activate": false
-    }
-  ],
-  "abilities": [
-    {
-      "timing": "ON_ACTIVATION",
-      "effect": "SEND_TO_GRAVEYARD"
-    }
-  ],
   "flavor": {
     "desc": "This is a desc.",
     "text": "Stands proud and tall.",
-    "art_asset": "path"
+    "art_asset": "path/to/art"
   }
 }

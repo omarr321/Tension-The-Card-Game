@@ -12,7 +12,7 @@ public class Deck {
     private ArrayList<Card> deck = new ArrayList<>();
 
     public Deck(UUID parentUUID) {this.parentUUID = parentUUID;}
-    public Deck(UUID parentUUID, ArrayList<Card> deck) {this.deck = deck; this.parentUUID = parentUUID;}
+    public Deck(UUID parentUUID, ArrayList<Card> deck) {this.deck = deck; this.parentUUID = parentUUID; }
 
     public void addCardToTop(Card card) {
         this.deck.addFirst(card);
