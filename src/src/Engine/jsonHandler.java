@@ -10,41 +10,42 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class jsonHandler {
-    private String jsonString;
-    private Gson gsonObj = new Gson();
     private JsonObject obj = new JsonObject();
 
-    public jsonHandler(String cat, String cardName) {
+    public jsonHandler(String category, String cardName) {
         String currentWorkingDirectory = new File("").getAbsolutePath();
-        Path filePath = Paths.get(currentWorkingDirectory, "src", "database", "cards", cat, cardName);
+        Path filePath = Paths.get(currentWorkingDirectory, "src", "database", "cards", category, cardName + ".crd");
 
         System.out.println("Card File: " + filePath.toString());
 
         try {
-            jsonString = Files.readString(filePath);
+            String jsonString = Files.readString(filePath);
+            Gson gsonObj = new Gson();
             obj = gsonObj.fromJson(jsonString, obj.getClass());
         } catch (IOException ex) {
             //TODO: Error out to the logging
         }
     }
 
-    public String getStringKey(String[] arr) {
+    public String getStringKey(String keyAddress) {
         JsonObject temp = obj;
+        String[] arr = keyAddress.split("\\.");
+
         for (int i = 0; i < arr.length-1; i++) {
             temp = obj.getAsJsonObject(arr[i]);
         }
-        if (!temp.isJsonPrimitive()) {
-            return temp.get(arr[arr.length-1]).toString();
-        } else {
-            return temp.get(arr[arr.length-1]).getAsString();
-        }
+
+        return temp.get(arr[arr.length-1]).getAsString();
     }
 
-    public int getIntKey(String[] arr) {
+    public int getIntKey(String keyAddress) {
         JsonObject temp = obj;
+        String[] arr = keyAddress.split("\\.");
+
         for (int i = 0; i < arr.length-1; i++) {
             temp = obj.getAsJsonObject(arr[i]);
         }
+
         return temp.get(arr[arr.length-1]).getAsInt();
     }
 }

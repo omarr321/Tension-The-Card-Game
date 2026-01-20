@@ -1,11 +1,11 @@
 {
   "header": {
-    "id": "TTCG_FRY_0001",
-    "name": "Test Card",
+    "id": "TTCG_RNC_0003",
+    "name": "Cooler Card",
     "type": "Board",
-    "sub_type": "Heavy",
+    "sub_type": "Hauler",
     "set": "Classic",
-    "rarity": "Frayed"
+    "rarity": "Reinforced"
   },
   "stats": {
     "grip_power": 3,

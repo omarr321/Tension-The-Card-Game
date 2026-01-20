@@ -1,11 +1,11 @@
 {
   "header": {
-    "id": "TTCG_FRY_0001",
-    "name": "Test Card",
+    "id": "TTCG_BDD_0002",
+    "name": "Cool Card",
     "type": "Board",
-    "sub_type": "Heavy",
+    "sub_type": "Anchor",
     "set": "Classic",
-    "rarity": "Frayed"
+    "rarity": "Braided"
   },
   "stats": {
     "grip_power": 3,

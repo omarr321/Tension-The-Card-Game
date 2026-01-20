@@ -153,4 +153,38 @@ public class Card {
             return this.ShortHand;
         }
     }
+
+    public static CARD_TYPE getTypeByString(String type) {
+        return switch (type) {
+            case "Board" -> CARD_TYPE.BOARD;
+            case "Trap" -> CARD_TYPE.TRAP;
+            case "Action" -> CARD_TYPE.ACTION;
+            default -> null;
+        };
+    }
+
+    public static CARD_SUBTYPE getSubTypeByString(String subtype) {
+        return switch (subtype) {
+            case "Hauler" -> CARD_SUBTYPE.HAULER;
+            case "Trap" -> CARD_SUBTYPE.TRAP;
+            case "Action" -> CARD_SUBTYPE.ACTION;
+            case "Anchor" -> CARD_SUBTYPE.ANCHOR;
+            case "Rope" -> CARD_SUBTYPE.ROPE;
+            case "Heavy" -> CARD_SUBTYPE.HEAVY;
+            case "Dredger" -> CARD_SUBTYPE.DREDGER;
+            case "Winch" -> CARD_SUBTYPE.WINCH;
+            default -> null;
+        };
+    }
+
+    public static RARITY getRarityByString(String rarity) {
+        return switch (rarity) {
+            case "Frayed" -> RARITY.FRAYED;
+            case "Braided" -> RARITY.BRAIDED;
+            case "Reinforced" -> RARITY.REINFORCED;
+            case "Galvanized" -> RARITY.GALVANIZED;
+            case "Unbreakable" -> RARITY.UNBREAKABLE;
+            default -> null;
+        };
+    }
 }

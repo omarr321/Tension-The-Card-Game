@@ -7,8 +7,8 @@ import javax.script.ScriptException;
 import java.util.UUID;
 
 public class JS_Parser {
-    private ScriptEngine engine;
-    private Invocable invocable;
+    private final ScriptEngine engine;
+    private final Invocable invocable;
 
     public JS_Parser() {
         ScriptEngineManager manager = new ScriptEngineManager();
