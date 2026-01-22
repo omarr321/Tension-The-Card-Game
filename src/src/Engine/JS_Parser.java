@@ -27,10 +27,8 @@ public class JS_Parser {
 
     public void executeEffect(String effectName, UUID selfId, Object gameController) {
         try {
-            // "world" is your GameController
             invocable.invokeFunction(effectName, selfId.toString(), gameController);
         } catch (ScriptException | NoSuchMethodException e) {
-            // This is where the Middleman/Watcher picks up the error
             System.err.println("[JS_ERROR] Failed to execute: " + effectName);
             e.printStackTrace();
         }

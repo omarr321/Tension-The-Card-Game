@@ -21,8 +21,8 @@ public class Testing {
 
         Database tmp = new Database(new String[] {"classic"});
         System.out.println(tmp.getCardList());
-        System.out.println(tmp.getCopyOfCard("TTCG_FRY_0001", null).getName());
-        System.out.println(tmp.getCopyOfCard("TTCG_BDD_0002", null).getName());
-        System.out.println(tmp.getCopyOfCard("TTCG_RNC_0003", null).getName());
+        System.out.println(tmp.getCopyOfCard("TTCG_C_FRY_0001", null).getName());
+        System.out.println(tmp.getCopyOfCard("TTCG_C_BDD_0002", null).getName());
+        System.out.println(tmp.getCopyOfCard("TTCG_C_RNC_0003", null).getName());
     }
 }

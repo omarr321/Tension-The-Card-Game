@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class Database {
     private ArrayList<Card> activeCardList = new ArrayList<>();
-    private ArrayList<Effect> activeEffectList = new ArrayList<>();
+    private ArrayList<Effect> activeEffectList = new ArrayList<>(); //TODO: Add Effects
 
     public Database(String[] catagoryList) {
         for (String e : catagoryList) {
