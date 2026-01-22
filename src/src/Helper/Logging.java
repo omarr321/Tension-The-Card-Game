@@ -5,13 +5,31 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.time.Instant;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import static Helper.Utility.charPrint;
 
 //TODO: Set up the logging class to accept messages from other threads and metheds and log them to the console/file
-public class Logging {
+public class Logging implements Runnable{
     private static Path cmd, gameActions, alerts, logs;
     private static BufferedWriter cmdWriter, gameActionsWriter, alertsWriter, logsWriter;
+    private static final LinkedBlockingDeque<MessageWrapper> messages = new LinkedBlockingDeque<>();
+
+    @Override
+    public void run() {
+        while (true) {
+            MessageWrapper message;
+            try {
+                message = messages.takeFirst();
+            } catch (InterruptedException e) {
+                System.err.println("Logging Thread interrupted... cleaning up!");
+                break;
+            }
+            processMessage(message);
+        }
+        cleanupLogFiles();
+        System.err.println("Logging Thread Terminated!");
+    }
 
     public static void setupLogFiles() {
         String currentWorkingDirectory = new File("").getAbsolutePath();
@@ -40,35 +58,50 @@ public class Logging {
     }
 
     public static void cleanupLogFiles() {
-        //TODO: Clean up log files
+        while (!messages.isEmpty()) {
+            MessageWrapper message = messages.pollFirst();
+            if (message != null) {
+                processMessage(message);
+            }
+        }
+
+        try {
+            if (cmdWriter != null) cmdWriter.close();
+            if (gameActionsWriter != null) gameActionsWriter.close();
+            if (alertsWriter != null) alertsWriter.close();
+            if (logsWriter != null) logsWriter.close();
+        } catch (IOException e) {
+            System.err.println("Error closing log writers: " + e.getMessage());
+        }
     }
 
-    public static void QueueLog(LOG_TYPE type, String message) {
+    private static void processMessage(MessageWrapper message) {
+        if (message == null) return;
         try {
-            switch (type) {
+            switch (message.getType()) {
                 case MESSAGE:
-                    charPrint(message);
-                    logsWriter.append("MESSAGE [").append(String.valueOf(Instant.now())).append("]: ").append(message).append("\n");
+                    charPrint(message.getMessage());
+                    logsWriter.append("MESSAGE [").append(String.valueOf(Instant.now())).append("]: ").append(message.getMessage()).append("\n");
                     logsWriter.flush();
                     break;
                 case ALERT:
-                    alertsWriter.append("ALERT [").append(String.valueOf(Instant.now())).append("]: ").append(message).append("\n");
+                    alertsWriter.append("ALERT [").append(String.valueOf(Instant.now())).append("]: ").append(message.getMessage()).append("\n");
                     alertsWriter.flush();
                     break;
                 case CMD:
-                    cmdWriter.append("CMD [").append(String.valueOf(Instant.now())).append("]: ").append(message).append("\n");
+                    cmdWriter.append("CMD [").append(String.valueOf(Instant.now())).append("]: ").append(message.getMessage()).append("\n");
                     cmdWriter.flush();
                     break;
                 case ADM_CMD:
-                    cmdWriter.append("ADM_CMD [").append(String.valueOf(Instant.now())).append("]: ").append(message).append("\n");
+                    cmdWriter.append("ADM_CMD [").append(String.valueOf(Instant.now())).append("]: ").append(message.getMessage()).append("\n");
                     cmdWriter.flush();
                     break;
                 case GAME_STATES:
-                    alertsWriter.append("GAME_STATES [").append(String.valueOf(Instant.now())).append("]: ").append(message).append("\n");
+                    alertsWriter.append("GAME_STATES [").append(String.valueOf(Instant.now())).append("]: ").append(message.getMessage()).append("\n");
                     alertsWriter.flush();
                     break;
                 case GAME_ACTION:
-                    gameActionsWriter.append("GAME_ACTION [").append(String.valueOf(Instant.now())).append("]: ").append(message).append("\n");
+                    gameActionsWriter.append("GAME_ACTION [").append(String.valueOf(Instant.now())).append("]: ").append(message.getMessage()).append("\n");
                     gameActionsWriter.flush();
                     break;
                 default:
@@ -77,8 +110,14 @@ public class Logging {
         } catch (IOException e) {
             System.err.println("An I/O error occurred: " + e.getMessage());
         }
+    }
 
+    public static void QueueLog(MessageWrapper message) {
+        messages.addLast(message);
+    }
 
+    public static void QueuePriorityLog(MessageWrapper message) {
+        messages.addFirst(message);
     }
 
     public enum LOG_TYPE {

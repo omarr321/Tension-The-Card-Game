@@ -1,6 +1,5 @@
 package Helper;
 
-//TODO: Make a watcher thead that watchs all process of the game and close down eveyrthting if a process crashes + cleanup
 public class Watcher implements Runnable{
     private Process[] processes;
     private Thread[] threads;
@@ -12,17 +11,37 @@ public class Watcher implements Runnable{
 
     @Override
     public void run() {
-        System.out.println("Checking health of all process and threads...");
+        System.out.println("Watcher | Monitoring health...");
+
         while (true) {
             if (!checkHealth()) {
-                System.out.println("A process or thread died...");
-                Logging.cleanupLogFiles();
+                System.err.println("Watcher | System failure detected. Initiating shutdown...");
                 this.killAll();
                 break;
             }
-            System.out.println("All processes and threads are good...");
             Utility.sleep(1000);
         }
+
+        System.err.println("Watcher | Waiting for all threads to die...");
+        while(!(allKilled())) {
+            Utility.sleep(1000);
+        }
+        System.err.println("Watcher | Cleaning up log files...");
+        Logging.cleanupLogFiles();
+        System.err.println("Watcher | Done!");
+    }
+
+    private boolean allKilled() {
+        for (Process p : processes) {
+            if (p != null && p.isAlive()) return false;
+        }
+
+        // Check all managed threads (including the Logging thread)
+        for (Thread t : threads) {
+            if (t != null && t.isAlive()) return false;
+        }
+
+        return true;
     }
 
     private void killAll() {
