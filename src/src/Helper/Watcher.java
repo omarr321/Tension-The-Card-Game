@@ -26,8 +26,6 @@ public class Watcher implements Runnable{
         while(!(allKilled())) {
             Utility.sleep(1000);
         }
-        System.err.println("Watcher | Cleaning up log files...");
-        Logging.cleanupLogFiles();
         System.err.println("Watcher | Done!");
     }
 
@@ -47,7 +45,8 @@ public class Watcher implements Runnable{
     private void killAll() {
         for (Process p : processes) {
             if (p.isAlive()) {
-                p.destroy();
+                p.descendants().forEach(ProcessHandle::destroyForcibly);
+                p.destroyForcibly();
             }
         }
 

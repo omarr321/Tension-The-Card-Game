@@ -8,13 +8,13 @@ import Helper.Watcher;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.*;
 
 public class GameController {
     private static Watcher watcher;
     private static final ArrayList<Thread> threads = new ArrayList<>();
     private static final ArrayList<Process> processes = new ArrayList<>();
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Logging.setupLogFiles();
 
         Logging.QueueLog(new MessageWrapper(Logging.LOG_TYPE.MESSAGE, "Creating Logging Thread..."));
@@ -34,14 +34,39 @@ public class GameController {
                 "-Command", "Get-Content '" + Paths.get(new File("").getAbsolutePath(), "logs", "logs.log") + "' -Wait"
         );
 
-        readLogLogs.redirectErrorStream(true);
-        //ProcessBuilder readLogCmd = new ProcessBuilder("cmd", "/c", "start", "powershell", "-NoExit", "Get-Content '" + Paths.get(new File("").getAbsolutePath(), "logs", "cmd.log").toString() + "' -Wait");
-        //TODO: Add other logging here!
+        final List<String> commands = new ArrayList<String>();
+        commands.add("cmd.exe");
+        commands.add("/C");
+        commands.add("start");
+        commands.add("/wait");
+        commands.add("powershell");
+        commands.add("-NoExit");
 
+        final List<String> cmdCommands = new ArrayList<>(commands);
+        cmdCommands.add("$Host.UI.RawUI.WindowTitle = 'Command Log File';");
+        cmdCommands.add("Get-Content '" + Paths.get(new File("").getAbsolutePath(), "logs", "cmd.log").toString() + "' -Wait");
+        ProcessBuilder logCMD = new ProcessBuilder(cmdCommands);
+
+        final List<String> logCommands = new ArrayList<>(commands);
+        logCommands.add("$Host.UI.RawUI.WindowTitle = 'General Log File';");
+        logCommands.add("Get-Content '" + Paths.get(new File("").getAbsolutePath(), "logs", "logs.log").toString() + "' -Wait");
+        ProcessBuilder logLog = new ProcessBuilder(logCommands);
+
+        final List<String> alertsCommands = new ArrayList<>(commands);
+        alertsCommands.add("$Host.UI.RawUI.WindowTitle = 'Alerts Log File';");
+        alertsCommands.add("Get-Content '" + Paths.get(new File("").getAbsolutePath(), "logs", "alerts.log").toString() + "' -Wait");
+        ProcessBuilder logAlerts = new ProcessBuilder(alertsCommands);
+
+        final List<String> gameActionsCommands = new ArrayList<>(commands);
+        gameActionsCommands.add("$Host.UI.RawUI.WindowTitle = 'Game History Log File';");
+        gameActionsCommands.add("Get-Content '" + Paths.get(new File("").getAbsolutePath(), "logs", "gameActions.log").toString() + "' -Wait");
+        ProcessBuilder logGameActions = new ProcessBuilder(gameActionsCommands);
 
         try {
-            processes.add(readLogLogs.start());
-            //processes.add(readLogCmd.start());
+            processes.add(logCMD.start());
+            processes.add(logLog.start());
+            processes.add(logAlerts.start());
+            processes.add(logGameActions.start());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -54,17 +79,27 @@ public class GameController {
         watcherThread.setName("System-Watcher");
         watcherThread.start();
 
-        Utility.sleep(1000);
-        Logging.QueueLog(new MessageWrapper(Logging.LOG_TYPE.CMD, "CMD TEST 1"));
-        Utility.sleep(2500);
-        Logging.QueueLog(new MessageWrapper(Logging.LOG_TYPE.MESSAGE, "Test 1"));
-        Utility.sleep(1000);
-        Logging.QueueLog(new MessageWrapper(Logging.LOG_TYPE.MESSAGE, "Test 2"));
-        Utility.sleep(2000);
-        Logging.QueueLog(new MessageWrapper(Logging.LOG_TYPE.CMD, "CMD TEST 2"));
-        Utility.sleep(1500);
-        Logging.QueueLog(new MessageWrapper(Logging.LOG_TYPE.CMD, "CMD TEST 3"));
-        Logging.QueuePriorityLog(new MessageWrapper(Logging.LOG_TYPE.MESSAGE, "Priority Log"));
-        Utility.sleep(1000000);
+        try {
+            Utility.sleepWithIntEx(1000);
+            Logging.QueueLog(new MessageWrapper(Logging.LOG_TYPE.CMD, "CMD TEST 1"));
+            Utility.sleepWithIntEx(2500);
+            Logging.QueueLog(new MessageWrapper(Logging.LOG_TYPE.MESSAGE, "Test 1"));
+            Utility.sleepWithIntEx(1000);
+            Logging.QueueLog(new MessageWrapper(Logging.LOG_TYPE.MESSAGE, "Test 2"));
+            Utility.sleepWithIntEx(2000);
+            Logging.QueueLog(new MessageWrapper(Logging.LOG_TYPE.CMD, "CMD TEST 2"));
+            Utility.sleepWithIntEx(1500);
+            Logging.QueueLog(new MessageWrapper(Logging.LOG_TYPE.CMD, "CMD TEST 3"));
+            Logging.QueuePriorityLog(new MessageWrapper(Logging.LOG_TYPE.MESSAGE, "Priority Log"));
+
+            for (int i = 0; i < 100; i++) {
+                Logging.QueueLog(new MessageWrapper(Logging.LOG_TYPE.MESSAGE, "Test loop - " + i));
+            }
+
+            Utility.sleepWithIntEx(1000000);
+        } catch (InterruptedException e) {
+            System.err.println("Game Controller Thread interrupted... cleaning up!");
+            System.err.println("Game Controller Thread Terminated!");
+        }
     }
 }
