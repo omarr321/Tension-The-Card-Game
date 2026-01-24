@@ -26,14 +26,6 @@ public class GameController {
         Logging.QueueLog(new MessageWrapper(Logging.LOG_TYPE.MESSAGE, "Creating the log files..."));
         Logging.QueueLog(new MessageWrapper(Logging.LOG_TYPE.MESSAGE, "Creating processes that open and read all the log files..."));
 
-        //ProcessBuilder readLogLogs = new ProcessBuilder("cmd", "/c", "start", "powershell", "-NoExit", "Get-Content '" + Paths.get(new File("").getAbsolutePath(), "logs", "logs.log").toString() + "' -Wait");
-        ProcessBuilder readLogLogs = new ProcessBuilder(
-                "powershell.exe",
-                "-NoExit",
-                "-ExecutionPolicy", "Bypass",
-                "-Command", "Get-Content '" + Paths.get(new File("").getAbsolutePath(), "logs", "logs.log") + "' -Wait"
-        );
-
         final List<String> commands = new ArrayList<String>();
         commands.add("cmd.exe");
         commands.add("/C");

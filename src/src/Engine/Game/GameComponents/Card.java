@@ -3,7 +3,7 @@ package Engine.Game.GameComponents;
 import java.util.UUID;
 
 /**
-This class holds the card data for a card. When it gets loaded from disk, it stores it in the db so that it can be pulled with ease.
+ This class holds the card data for a card. When it gets loaded from disk, it stores it in the db so that it can be pulled with ease.
  @author Omar R.
  @version 1.0.0
  */
