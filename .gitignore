@@ -28,3 +28,7 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### OTHER ###
+src/physicalCards/CardMaker_1.4.0.0/
+src/physicalCards/PdfConstruct_0.0.0.5/

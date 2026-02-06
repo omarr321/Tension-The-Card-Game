@@ -1,0 +1,5 @@
+Count,Name,HasGripPull,Grip,Pull,RallyCost,HasSubType,Type,SubType,Desc,FlavorText,Set,cardID,BackText
+1,Test 1,Yes,1,2,4,Yes,Board,Guard,A Guard!,A Guard in flavor Text,Classic,T_1,Tension: The Card Game
+1,Test 2,No,0,0,1,Yes,Reaction,a,cast fuck you,fuck you,Classic,T_2,Tension: The Card Game
+1,Test 3,Yes,4,5,4,No,Action,aghhhh,you are dumb,and now you suck,Classic,T_3,Tension: The Card Game
+1,Test 4,No,0,0,2,No,Trap,Large mouth bass,it bites,dont fish!,Classic,T_4,Tension: The Card Game
